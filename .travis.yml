@@ -10,21 +10,26 @@ before_install:
   - docker build -t any_lower_case_tag -f Dockerfile.dev .
 
 # Travis only cares about status code after running, NOT the output to terminal
-# if it doesn't exit, the Travis DOES NOT KNOW IT SUCCEEDED
+# If it doesn't exit, the Travis DOES NOT KNOW IT SUCCEEDED
+# Only deploys if the tests pass
 script:
   - docker run -e CI=true any_lower_case_tag npm run test
 
 deploy:
   provider: elasticbeanstalk
+  # Same region as what our AWS was signed up on
   region: "us-east-1"
+  # Same application name as on Elastic beanstalk
   app: "docker-react-tutorial"
+  # Same environment name as on Elastic beanstalk environment
   env: "Dockerreacttutorial-env"
   # S3 bucket that we ship code to, auto created by amazon
   # look into the list of S3 and look for something like this
   bucket_name: "elasticbeanstalk-us-east-1-611140798454"
   # typically the same as the app name
   bucket_path: "docker-react-tutorial"
-  on: 
+  on:
     branch: master
+  # Keys set on the TravisCI dashboard for this project
   access_key_id: "$AWS_ACCESS_KEY"
   secret_access_key: "$AWS_SECRET_KEY"
