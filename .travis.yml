@@ -1,0 +1,15 @@
+# Docker needs sudo
+sudo: required
+
+language: generic
+
+services:
+  - docker
+
+before_install:
+  - docker build -t any_lower_case_tag -f Dockerfile.dev .
+
+# Travis only cares about status code after running, NOT the output to terminal
+# if it doesn't exit, the Travis DOES NOT KNOW IT SUCCEEDED
+script:
+  - docker run -e CI=true any_lower_case_tag npm run test
