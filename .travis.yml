@@ -13,3 +13,18 @@ before_install:
 # if it doesn't exit, the Travis DOES NOT KNOW IT SUCCEEDED
 script:
   - docker run -e CI=true any_lower_case_tag npm run test
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-1"
+  app: "docker-react-tutorial"
+  env: "Dockerreacttutorial-env"
+  # S3 bucket that we ship code to, auto created by amazon
+  # look into the list of S3 and look for something like this
+  bucket_name: "elasticbeanstalk-us-east-1-611140798454"
+  # typically the same as the app name
+  bucket_path: "docker-react-tutorial"
+  on: 
+    branch: master
+  access_key_id: "$AWS_ACCESS_KEY"
+  secret_access_key: "$AWS_SECRET_KEY"
